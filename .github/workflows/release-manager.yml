@@ -3,6 +3,15 @@ name: Release Manager
 on:
   workflow_dispatch:
     inputs:
+      platform_bump:
+        description: 'Platform version bump (patch/minor/major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
       backend_bump:
         description: 'Backend version bump (patch/minor/major)'
         required: true
@@ -21,15 +30,6 @@ on:
           - patch
           - minor
           - major
-      platform_bump:
-        description: 'Platform version bump (patch/minor/major)'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
 
 jobs:
   update-release-config:
@@ -41,23 +41,23 @@ jobs:
       - name: Update release config
         run: |
           echo "{
+            \"platform\": \"${{ github.event.inputs.platform_bump }}\",
             \"backend\": \"${{ github.event.inputs.backend_bump }}\",
-            \"frontend\": \"${{ github.event.inputs.frontend_bump }}\",
-            \"platform\": \"${{ github.event.inputs.platform_bump }}\"
+            \"frontend\": \"${{ github.event.inputs.frontend_bump }}\"
           }" > release_config.json
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Update release bumps: backend=${{ github.event.inputs.backend_bump }}, frontend=${{ github.event.inputs.frontend_bump }}, platform=${{ github.event.inputs.platform_bump }}"
-          title: "Release Bump: ${{ github.event.inputs.backend_bump }}/${{ github.event.inputs.frontend_bump }}/${{ github.event.inputs.platform_bump }}"
+          commit-message: "Update release bumps: platform=${{ github.event.inputs.platform_bump }}, backend=${{ github.event.inputs.backend_bump }}, frontend=${{ github.event.inputs.frontend_bump }}"
+          title: "Release Bump: platform - ${{ github.event.inputs.platform_bump }}, backend - ${{ github.event.inputs.backend_bump }}, frontend - ${{ github.event.inputs.frontend_bump }}"
           body: |
             ## Release Version Bumps
             
+            - **Platform**: ${{ github.event.inputs.platform_bump }}
             - **Backend**: ${{ github.event.inputs.backend_bump }}
             - **Frontend**: ${{ github.event.inputs.frontend_bump }}
-            - **Platform**: ${{ github.event.inputs.platform_bump }}
             
             This PR updates the release configuration with the selected version bumps.
           branch: release-bump-${{ github.run_number }}
