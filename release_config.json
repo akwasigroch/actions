@@ -1,0 +1,5 @@
+{
+  "backend": "patch",
+  "frontend": "patch", 
+  "platform": "patch"
+}
