@@ -10,3 +10,6 @@ jobs:
         steps:
             - name: action2
               run: echo "Hello, action 2!"
+
+            - name: display trigger
+              run: echo ${{ github.event_name }}
