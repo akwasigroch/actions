@@ -17,4 +17,4 @@ jobs:
 
   action2:
     needs: print
-    uses: ./.github/workflows/action2.yml
+    uses: ./.github/workflows/actin2.yml
