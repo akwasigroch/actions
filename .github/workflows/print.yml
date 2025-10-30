@@ -15,6 +15,6 @@ jobs:
       - name: Run script
         run: echo "Hello, action 1!"
 
-  backend-deploy:
+  action2:
     needs: print
     uses: ./.github/workflows/action2.yml
