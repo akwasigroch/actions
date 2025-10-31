@@ -7,10 +7,11 @@ on:
 
 
 env:
-  RUN_ON_MAIN  = startsWith(github.ref, 'refs/heads/main')
+  RUN_ON_MAIN  : startsWith(github.ref, 'refs/heads/main')
+
 jobs:
   print:
-    if: env.RUN_ON_MAIN == 'true'
+    if: env.RUN_ON_MAIN 
     runs-on: ubuntu-latest
     steps:
 
