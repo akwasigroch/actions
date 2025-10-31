@@ -6,24 +6,25 @@ on:
         - main
 
 
-env:
-  RUN_ON_MAIN  : startsWith(github.ref, 'refs/heads/main')
-
 jobs:
   print:
-    if: env.RUN_ON_MAIN 
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/heads/main') }}
+    env:
+      RUN_ON_MAIN: ${{ startsWith(github.ref, 'refs/heads/main') }}
     steps:
 
       - name: Run script
-        run: echo "Hello, action 1!"
+        run: docker compose version
       
       - name: display trigger
         run: echo ${{ github.event_name }}
 
   print2:
     runs-on: ubuntu-latest
-    if: env.RUN_ON_MAIN == 'true'
+    if: ${{ startsWith(github.ref, 'refs/heads/main') }}
+    env:
+      RUN_ON_MAIN: ${{ startsWith(github.ref, 'refs/heads/main') }}
     steps:
       - name: Run script
         run: echo "Hello, action 2!"
