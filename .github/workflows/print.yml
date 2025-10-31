@@ -18,6 +18,9 @@ jobs:
       - name: display trigger
         run: echo ${{ github.event_name }}
 
-  action2:
-    needs: print
-    uses: ./.github/workflows/actin2.yml
+  print2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run script
+        run: echo "Hello, action 2!"
+      
