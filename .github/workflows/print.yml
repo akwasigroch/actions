@@ -1,31 +1,35 @@
-name: Print
+name: Rhesis LLM Tests
+
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-        - main
 
+env:
+  RHESIS_ENDPOINT_NAME: 'Insurance Chatbot'
+  RHESIS_TEST_SET_NAME: 'Customer Service Interactions'
 
 jobs:
-  print:
+  test:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/heads/main') }}
-    env:
-      RUN_ON_MAIN: ${{ startsWith(github.ref, 'refs/heads/main') }}
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Run script
-        run: docker compose version
-      
-      - name: display trigger
-        run: echo ${{ github.event_name }}
+      - name: Run Rhesis Tests
+        id: rhesis
+        uses: akwasigroch/rhesis-action@main
+        with:
+          api-key: ${{ secrets.RHESIS_API_KEY }}
+          endpoint-name: ${{ env.RHESIS_ENDPOINT_NAME }}
+          test-set-name: ${{ env.RHESIS_TEST_SET_NAME }}
+          base-url: 'https://dev-api.rhesis.ai'
 
-  print2:
-    runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/heads/main') }}
-    env:
-      RUN_ON_MAIN: ${{ startsWith(github.ref, 'refs/heads/main') }}
-    steps:
-      - name: Run script
-        run: echo "Hello, action 2!"
-      
+      - name: Report Results
+        if: always()
+        run: |
+          echo "## Rhesis Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Total | ${{ steps.rhesis.outputs.total }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Passed | ${{ steps.rhesis.outputs.passed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Failed | ${{ steps.rhesis.outputs.failed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Success Rate | ${{ steps.rhesis.outputs.success-rate }}% |" >> $GITHUB_STEP_SUMMARY
