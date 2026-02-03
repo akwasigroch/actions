@@ -5,7 +5,7 @@ on:
 
 env:
   RHESIS_ENDPOINT_NAME: 'Insurance Chatbot'
-  RHESIS_TEST_SET_NAME: 'Customer Service Interactions'
+  RHESIS_TEST_SET_NAME: 'Example Test Set: Insurance Chatbot Quality Evaluation'
 
 jobs:
   test:
